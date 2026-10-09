@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GCT Placements</title>
+<meta name="description" content="Celebrating our students placed at leading organisations.">
+<meta name="theme-color" content="#1f3a6e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #16161d;
+    --muted: #5d6070;
+    --line: #ececf1;
+    --pod: #f7f7fa;
+    --accent: #1f3a6e;
+    --accent-soft: #e9eff9;
+    --gold: #a8741a;
+    --gold-soft: #fbf3e2;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .section {
+    max-width: 1260px;
+    margin: 0 auto;
+    padding: 64px 16px 72px;
+  }
+
+  .section-head {
+    text-align: center;
+    margin-bottom: 44px;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+
+  .section-head h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(28px, 4vw, 40px);
+    line-height: 1.15;
+    letter-spacing: -.01em;
+  }
+
+  .section-head p {
+    color: var(--muted);
+    margin-top: 10px;
+    font-size: 16px;
+  }
+
+  /* ---------- Horizontal pod row ---------- */
+  .pod-row {
+    position: relative;
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 8px 4px 28px;
+    justify-content: safe center;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  .pod-row::-webkit-scrollbar { display: none; }
+  .pod-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 16px; }
+
+  /* ---------- Slider controls (shown only when cards overflow) ---------- */
+  .slider-nav {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 4px;
+  }
+  .slider.is-scrollable .slider-nav { display: flex; }
+
+  .slider-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #dfe5f0;
+    background: #ffffff;
+    color: var(--accent);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: 0 6px 16px -10px rgba(31, 58, 110, .45);
+    transition: background .2s ease, color .2s ease, opacity .2s ease;
+  }
+  .slider-btn:hover { background: var(--accent); color: #fff; }
+  .slider-btn:disabled { opacity: .35; cursor: default; background: #fff; color: var(--accent); }
+  .slider-btn svg { width: 18px; height: 18px; }
+
+  .slider-dots { display: flex; gap: 8px; }
+  .slider-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: #cdd6e6;
+    cursor: pointer;
+    transition: width .35s ease, background .35s ease;
+  }
+  .slider-dot[aria-current="true"] { width: 26px; background: var(--accent); }
+
+  /* ---------- Card ---------- */
+  .pod {
+    flex: 0 0 278px;
+    scroll-snap-align: center;
+    background: #ffffff;
+    border: 1px solid #e4e8f0;
+    border-top: 3px solid var(--accent);
+    border-radius: 14px;
+    overflow: hidden;
+    padding-bottom: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 12px 32px -20px rgba(31, 58, 110, .30);
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+  .pod:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 48px -22px rgba(31, 58, 110, .38);
+  }
+  .pod > *:not(.pod-photo) { margin-left: 24px; margin-right: 24px; }
+
+  .pod-photo {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #eef1f6;
+  }
+  .pod-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  .pod-photo.placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, #e9eff9 0%, #d3dff2 100%);
+  }
+  .pod-photo.placeholder span {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 72px;
+    letter-spacing: .04em;
+    color: var(--accent);
+    opacity: .85;
+  }
+
+  .package {
+    margin-top: -18px;
+    position: relative;
+    z-index: 1;
+    background: var(--accent);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 8px 20px;
+    border-radius: 999px;
+    box-shadow: 0 8px 18px -8px rgba(31, 58, 110, .55);
+    white-space: nowrap;
+  }
+  .package small {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #b9c8e6;
+    margin-right: 6px;
+  }
+
+  .pod-name {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: 23px;
+    line-height: 1.2;
+    margin-top: 20px;
+  }
+
+  .pod-role {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  .pod-dept {
+    margin-top: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 4px 12px;
+    border-radius: 999px;
+  }
+
+  .pod-company {
+    margin-top: 16px;
+    width: calc(100% - 48px);
+    padding: 12px 16px 14px;
+    background: #f6f8fc;
+    border: 1px solid #e6ebf4;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .pod-company span {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .pod-company img {
+    height: 32px;
+    width: auto;
+    display: block;
+  }
+
+  .pod-wish {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid #edf0f5;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  /* ---------- Mobile: one centred slide with a peek of the next ---------- */
+  @media (max-width: 640px) {
+    .section { padding: 44px 16px 48px; }
+    .section-head { margin-bottom: 28px; }
+    .eyebrow { font-size: 11px; margin-bottom: 12px; }
+    .section-head p { font-size: 14px; line-height: 1.55; max-width: 34ch; margin-inline: auto; }
+
+    .pod-row {
+      --card-w: min(78vw, 330px);
+      gap: 14px;
+      justify-content: flex-start;
+      margin-inline: -16px;
+      padding: 10px calc((100vw - var(--card-w)) / 2) 24px;
+    }
+    .pod {
+      flex: 0 0 var(--card-w);
+      scroll-snap-stop: always;
+      transform: scale(.92);
+      opacity: .55;
+      transition: transform .45s cubic-bezier(.2, .7, .2, 1), opacity .45s ease, box-shadow .45s ease;
+    }
+    .pod.is-active {
+      transform: none;
+      opacity: 1;
+      box-shadow: 0 22px 40px -22px rgba(31, 58, 110, .42);
+    }
+    .pod:hover { transform: scale(.92); }
+    .pod.is-active:hover { transform: none; }
+
+    .pod-photo { aspect-ratio: 1 / 1; }
+    .pod > *:not(.pod-photo) { margin-left: 20px; margin-right: 20px; }
+    .pod-company { width: calc(100% - 40px); }
+    .pod-name { font-size: 22px; margin-top: 18px; }
+    .pod-wish { font-size: 13.5px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pod, .slider-dot { transition: none; }
+    .pod:hover { transform: none; }
+    .pod-row { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<section class="section" aria-labelledby="placements-title">
+  <div class="section-head">
+    <span class="eyebrow">Placement Honours</span>
+    <h2 id="placements-title">Celebrating Our Distinguished Graduates</h2>
+    <p>With great pride, we honour our students as they begin promising careers with leading organisations.</p>
+  </div>
+
+  <div class="slider">
+  <div class="pod-row" tabindex="0" aria-label="Placed students" aria-roledescription="carousel">
+
+    <!-- Student 1 -->
+    <article class="pod">
+      <div class="pod-photo">
+        <img src="assets/students/sanjeev.jpg" alt="Portrait of Sanjeev Krishna">
+      </div>
+      <div class="package"><small>Package</small>₹ 18 LPA</div>
+      <h3 class="pod-name">Sanjeev Krishna</h3>
+      <p class="pod-role">Application Engineer</p>
+      <p class="pod-dept">Department of CSE</p>
+      <div class="pod-company"><span>Placed at</span><img src="assets/logos/idfc-first-bank.svg" alt="IDFC First Bank"></div>
+      <p class="pod-wish">Congratulations, Sanjeev! A well-deserved milestone and the start of an exciting chapter. Wishing you continued success, growth and fulfilment in the years ahead.</p>
+    </article>
+
+    <!-- Student 2 -->
+    <article class="pod">
+      <div class="pod-photo">
+        <img src="assets/students/ajin.jpg" alt="Portrait of Ajin P">
+      </div>
+      <div class="package"><small>Stipend</small>₹ 40K / month</div>
+      <h3 class="pod-name">Ajin P</h3>
+      <p class="pod-role">Analog Layout Intern</p>
+      <p class="pod-dept">Department of ECE</p>
+      <div class="pod-company"><span>Placed at</span><img src="assets/logos/texas-instruments.svg" alt="Texas Instruments"></div>
+      <p class="pod-wish">Congratulations, Ajin! Your dedication has opened the door to a remarkable journey. Wishing you a bright future full of growth, learning and success.</p>
+    </article>
+
+    <!-- Student 3 -->
+    <article class="pod">
+      <div class="pod-photo">
+        <img src="assets/students/hamdha.jpg" alt="Portrait of Hamdha Sirin M A">
+      </div>
+      <div class="package"><small>Stipend</small>₹ 40K / month</div>
+      <h3 class="pod-name">Hamdha Sirin M A</h3>
+      <p class="pod-role">Analog Layout Intern</p>
+      <p class="pod-dept">Department of ECE</p>
+      <div class="pod-company"><span>Placed at</span><img src="assets/logos/texas-instruments.svg" alt="Texas Instruments"></div>
+      <p class="pod-wish">Congratulations, Hamdha! This achievement is just the beginning. May every step ahead bring new milestones, joy and a truly successful career.</p>
+    </article>
+
+    <!-- Student 4 -->
+    <article class="pod">
+      <div class="pod-photo">
+        <img src="assets/students/sakthivel.jpg" alt="Portrait of Sakthivel K">
+      </div>
+      <div class="package"><small>Stipend</small>₹ 40K / month</div>
+      <h3 class="pod-name">Sakthivel K</h3>
+      <p class="pod-role">Analog Layout Intern</p>
+      <p class="pod-dept">Department of EIE</p>
+      <div class="pod-company"><span>Placed at</span><img src="assets/logos/texas-instruments.svg" alt="Texas Instruments"></div>
+      <p class="pod-wish">Congratulations, Sakthivel! A proud first step into the world of semiconductor design. May this internship bring rich learning and lead to a brilliant career ahead.</p>
+    </article>
+
+  </div>
+
+  <div class="slider-nav">
+    <button class="slider-btn" type="button" data-dir="-1" aria-label="Previous student">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="slider-dots"></div>
+    <button class="slider-btn" type="button" data-dir="1" aria-label="Next student">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+  </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var slider = document.querySelector('.slider');
+  var row = slider.querySelector('.pod-row');
+  var cards = Array.prototype.slice.call(row.querySelectorAll('.pod'));
+  var dotsWrap = slider.querySelector('.slider-dots');
+  var prevBtn = slider.querySelector('[data-dir="-1"]');
+  var nextBtn = slider.querySelector('[data-dir="1"]');
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var active = 0, timer = null, userTookOver = false;
+
+  var dots = cards.map(function (card, i) {
+    var d = document.createElement('button');
+    d.type = 'button';
+    d.className = 'slider-dot';
+    d.setAttribute('aria-label', 'Go to ' + card.querySelector('.pod-name').textContent);
+    d.addEventListener('click', function () { stopAuto(); goTo(i); });
+    dotsWrap.appendChild(d);
+    return d;
+  });
+
+  var lockUntil = 0; // ignore scroll-position tracking while a programmatic slide is animating
+
+  function setActive(i) {
+    active = i;
+    cards.forEach(function (c, n) { c.classList.toggle('is-active', n === i); });
+    dots.forEach(function (d, n) { d.setAttribute('aria-current', n === i ? 'true' : 'false'); });
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === cards.length - 1;
+  }
+
+  function goTo(i) {
+    i = Math.max(0, Math.min(cards.length - 1, i));
+    var card = cards[i];
+    setActive(i);
+    lockUntil = Date.now() + 700;
+    row.scrollTo({
+      left: card.offsetLeft - (row.clientWidth - card.offsetWidth) / 2,
+      behavior: reduceMotion ? 'auto' : 'smooth'
+    });
+  }
+
+  // Highlight whichever card sits closest to the centre of the row (for swipes)
+  function update() {
+    if (Date.now() < lockUntil) return;
+    var center = row.scrollLeft + row.clientWidth / 2, best = 0, bestDist = Infinity;
+    cards.forEach(function (c, i) {
+      var d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - center);
+      if (d < bestDist) { bestDist = d; best = i; }
+    });
+    setActive(best);
+  }
+
+  function checkScrollable() {
+    slider.classList.toggle('is-scrollable', row.scrollWidth > row.clientWidth + 2);
+    update();
+    startAuto();
+  }
+
+  // Gentle auto-advance until the visitor interacts
+  function startAuto() {
+    clearInterval(timer);
+    if (reduceMotion || userTookOver || !slider.classList.contains('is-scrollable')) return;
+    timer = setInterval(function () {
+      if (document.hidden) return;
+      goTo(active === cards.length - 1 ? 0 : active + 1);
+    }, 4500);
+  }
+  function stopAuto() { userTookOver = true; clearInterval(timer); }
+
+  row.addEventListener('scroll', update, { passive: true });
+  ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach(function (ev) {
+    row.addEventListener(ev, function () { stopAuto(); lockUntil = 0; }, { passive: true });
+  });
+  [prevBtn, nextBtn].forEach(function (b) {
+    b.addEventListener('click', function () { stopAuto(); goTo(active + Number(b.dataset.dir)); });
+  });
+
+  window.addEventListener('resize', checkScrollable);
+  window.addEventListener('load', checkScrollable);
+  checkScrollable();
+})();
+</script>
+
+</body>
+</html>
